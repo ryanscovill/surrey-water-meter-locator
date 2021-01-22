@@ -99,7 +99,7 @@
                 let coords = data.features[0].geometry;
                 let accountNo = data.features[0].attributes.ACCOUNT_NUMBER_N;
                 let url = "https://surrey.maps.arcgis.com/apps/Embed/index.html?webmap=05766ee6fedf4c9b886871bcb2225aa6&zoom=false&show_panel=false&popup_sidepanel=false&legend=false&disable_scroll=false&level=9&marker=" + coords.x + ";" + coords.y + ";26910";
-                let mapFrame = "<div class='mapDiv'><iframe frameborder='0' width='100%' height='400' scrolling='no' marginheight='0' marginwidth='0' title='Water Meter Map' src='" + url + "'</iframe></div>";
+                let mapFrame = "<div class='mapDiv'><iframe id='mapFrame' frameborder='0' width='100%' height='400' scrolling='no' marginheight='0' marginwidth='0' title='Water Meter Map' src='" + url + "'</iframe></div>";
 
                 $("#results").append(mapFrame);
 

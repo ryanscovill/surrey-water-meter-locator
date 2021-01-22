@@ -81,6 +81,11 @@ img {
     flex-direction: column;
     /*width: 100% !important;*/
 }
+
+#mapFrame {
+    pointer-events: none;
+}
+
 .embed-container {
     position: relative; 
     padding-bottom: 75%; 
