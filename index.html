@@ -25,7 +25,6 @@
             clearInput()
         }
         function clearInput() {
-            $("submit").prop("disabled", true);
             $(this).val('');
         }
 
@@ -57,12 +56,12 @@
                 let attributes = feature[0].attributes;
                 let img;
                 content += "<div class='col'><div class='card'>"
-                if (attributes.IMAGE !== null) {
+                if (attributes.IMAGE !== null && attributes.IMAGE.trim() !== "") {
                     let image = attributes.IMAGE.replace('http', 'https');
                     img = "<img src='" + image + "'>";
                 }
                 else {
-                    img = "<p>No Photo found at this location</p>"
+                    img = "<p>No photo found at this location.</p>"
                 }
                 content += img;
                 content += "</div></div>"
@@ -108,10 +107,10 @@
                 // $("#results").append(mapFrame2);
             }
 
-            $("#submit").click(function (e) {
+            $("#form").submit(function (e) {
                 e.preventDefault();
                 if ($(addressSearch).val()) {
-                    $("submit").prop("disabled", false);
+                    $("#submit").prop("disabled", true);
                     let address = $(addressSearch).val();
                     let addressParts = address.split(' ');
                     let house = addressParts[0];
@@ -127,41 +126,49 @@
                             f: "json",
                             where: "HOUSE = " + house + " AND STREET LIKE '" + street.trim().toUpperCase() + "%'",
                             outfields: "*"
-                        },
-                        success: function (data) {
-                            if (data.features.length > 0) {
-                                $("#results").html('');
-                                $("#results").append(getMap(data))
-                                $("#results").append(getMeterInformation(data))
-                            }
-                            else {
-                                let errorMsg = "<p>Could not find a meter at this property.</p></div>";
-                                $("#results").html(errorMsg);
-                            }
-                            $("#results").show();
                         }
+                    }).done(function (data) {
+                        if (data.features !== undefined && data.features.length > 0) {
+                            $("#results").html('');
+                            $("#results").append(getMap(data))
+                            $("#results").append(getMeterInformation(data))
+                        }
+                        else {
+                            let errorMsg = "<p>Could not find a meter at this property.</p>";
+                            $("#results").html(errorMsg);
+                        }
+                        $("#results").show();
+                    }).fail(function () {
+                        let errorMsg = "<p>An error occured.  Please refresh and try again.</p>";
+                        $("#results").html(errorMsg);
+                    }).always(function () {
+                        $("#submit").prop("disabled", false);
                     });
                 } else if ($(accountSearch).val()) {
-                    $("submit").prop("disabled", false);
+                    $("#submit").prop("disabled", true);
                     $.get({
                         url: "https://gisservices.surrey.ca/arcgis/rest/services/Public/Water/MapServer/1/query",
                         data: {
                             f: "json",
                             where: "ACCOUNT_NUMBER_N = " + $(accountSearch).val(),
                             outfields: "*"
-                        },
-                        success: function (data) {
-                            if (data.features.length > 0) {
-                                $("#results").html('');
-                                $("#results").append(getMap(data))
-                                $("#results").append(getMeterInformation(data))
-                            }
-                            else {
-                                let errorMsg = "<p>Entered Account # is not valid.</p></div>";
-                                $("#results").append(errorMsg);
-                            }
-                            $("#results").show();
                         }
+                    }).done(function (data) {
+                        if (data.features !== undefined && data.features.length > 0) {
+                            $("#results").html('');
+                            $("#results").append(getMap(data))
+                            $("#results").append(getMeterInformation(data))
+                        }
+                        else {
+                            let errorMsg = "<p>Entered Account # is not valid.</p>";
+                            $("#results").html(errorMsg);
+                        }
+                        $("#results").show();
+                    }).fail(function () {
+                        let errorMsg = "<p>An error occured.  Please refresh and try again.</p>";
+                        $("#results").html(errorMsg);
+                    }).always(function () {
+                        $("#submit").prop("disabled", false);
                     });
                 } else {
                     let errorMsg = "<p>Please enter an address or account #.</p></div>";
@@ -180,27 +187,34 @@
     </script>
     <div class="container-fluid">
         <div class="row">
-            <div id="title" class="title col mt-1"><h1>City of Surrey Water Meter Locator <span id="helpBtn"><svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" fill="currentColor" class="bi bi-question-circle-fill" viewBox="0 0 16 16">
-                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"/>
-              </svg></span></h1></div>
+            <div id="title" class="title col mt-1">
+                <h1>City of Surrey Water Meter Locator <span id="helpBtn"><svg xmlns="http://www.w3.org/2000/svg"
+                            width="1.5rem" height="1.5rem" fill="currentColor" class="bi bi-question-circle-fill"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z" />
+                        </svg></span></h1>
+            </div>
         </div>
         <div class="row">
-            <div id="content" class="content col">
-                <div id="address" name="address">
-                    <label for="addressSearch">Address: </label>
-                    <input id="addressSearch" class="inputBox" onFocus="value=''"
-                        onclick="clearInput();">
+            <form id="form">
+                <div id="content" class="content col">
+                    <div id="address" name="address">
+                        <label for="addressSearch">Address: </label>
+                        <input id="addressSearch" class="inputBox" onFocus="value=''" type="input"
+                            onclick="clearInput();">
+                    </div>
+                    <div><label style="font-weight: 600 !important;">OR</label></div>
+                    <div id="account" name="account">
+                        <label for="accountSearch">Account #: </label>
+                        <input id="accountSearch" type="text" class="inputBox" onFocus="value=''"
+                            onclick="clearInput();">
+                    </div>
+                    <div>
+                        <button type="submit" class="button" id="submit">Locate</button>
+                    </div>
                 </div>
-                <div><label style="font-weight: 600 !important;">OR</label></div>
-                <div id="account" name="account">
-                    <label for="accountSearch">Account #: </label>
-                    <input id="accountSearch" type="text" class="inputBox" onFocus="value=''"
-                        onclick="clearInput();">
-                </div>
-                <div>
-                    <button type="submit" class="button" id="submit">Locate</button>
-                </div>
-            </div>
+            </form>
         </div>
         <div id="results" class="row row-cols-1 row-cols-lg-3 mt-3"></div>
     </div>
@@ -214,7 +228,8 @@
             </div>
             <div class="modal-body">
                 <p>1. Enter your home address or account number.</p>
-                <p>2. A map and photo will show your water meter location. At the time the picture was taken, an orange traffic cone was placed on top of the meter.</p>
+                <p>2. A map and photo will show your water meter location. At the time the picture was taken, an orange
+                    traffic cone was placed on top of the meter.</p>
                 <p>The meter looks similar to this example: </p>
                 <img src="images/water-meter-example.jpg">
                 <p class="mt-1">If the meter is not found with this tool, contact the City of Surrey at 604-591-4152 for

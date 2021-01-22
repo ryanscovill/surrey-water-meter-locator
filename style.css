@@ -15,10 +15,10 @@ label {
 }
 
 h1 {
-    font-size: 2rem;
     font-weight: 700;
     line-height: 1.4;
     font-family: 'Univers LT W02 55 Roman', Helvetica, Arial, sans-serif !important;
+    font-size: 1.6rem;
 }
 
 .card {
@@ -202,6 +202,20 @@ button {
     text-transform: uppercase;
     padding: 1.5em;
     outline: none;
+}
+
+button:hover {
+    background-color: #59703b;
+    border: 2px solid #59703b;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+button:disabled {
+    cursor: default;
+    background-color: #a9cc7b;
+    border: 2px solid #a9cc7b;
+    box-shadow: none;
 }
 
 .button-light {
