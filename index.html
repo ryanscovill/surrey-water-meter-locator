@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,33 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>City of Surrey Water Meter Locator</title>
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="style.css">
 
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 
 
 </head>
-<style>
-    @media screen and (max-width: 1400px) {
-        .card {
-            width: calc(100% - 20px);
-        }
-    }
 
-</style>
 <body onload="loadFunction()">
     <script type="text/javascript">
         function loadFunction() {
             clearInput()
         }
-        function clearInput(){
-            $("submit").prop( "disabled", true );
-            $("#results").html('');
-            $("#results").hide()
+        function clearInput() {
+            $("submit").prop("disabled", true);
+            $(this).val('');
         }
 
         $(function () {
@@ -57,19 +50,23 @@
                     });
                 },
             });
- 
+
             function getMeterInformation(data) {
                 let content = '';
                 let feature = data.features
                 let attributes = feature[0].attributes;
                 let img;
+                content += "<div class='col'><div class='card'>"
                 if (attributes.IMAGE !== null) {
                     let image = attributes.IMAGE.replace('http', 'https');
-                    img = "<div><img src='" + image + "'></div>";
+                    img = "<img src='" + image + "'>";
                 }
-                else {img = "<p>No Photo found at this location</p>"}
+                else {
+                    img = "<p>No Photo found at this location</p>"
+                }
                 content += img;
-                let address = "<div><p>Address: " + attributes.HOUSE + " " + attributes.STREET + "</p>";
+                content += "</div></div>"
+                let address = "<div id='meterInfo' class='col'><div class='card'><p>Address: " + attributes.HOUSE + " " + attributes.STREET + "</p>";
                 content += address;
                 let accountNo = "<p>Account Number: " + attributes.ACCOUNT_NUMBER_N + "</p>";
                 content += accountNo;
@@ -77,11 +74,11 @@
                 content += propertyDesc;
                 let convertInstalledDate = new Date(attributes.INSTALLED_DATE_A);
                 let convertReadingDate = new Date(attributes.LAST_READING_DATE_A);
-                let installedDate = "<p>Meter Installed Date: " + convertInstalledDate.toLocaleDateString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'}) + "</p>";
+                let installedDate = "<p>Meter Installed Date: " + convertInstalledDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + "</p>";
                 content += installedDate;
                 let lastReading = "<p>Meter Last Reading: " + attributes.LAST_READING_A + "</p>";
                 content += lastReading;
-                let lastReadingDate = "<p>Meter Last Reading Date: " + convertReadingDate.toLocaleDateString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'})  + "</p>";
+                let lastReadingDate = "<p>Meter Last Reading Date: " + convertReadingDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + "</p>";
                 content += lastReadingDate;
                 let registerId = "<p>Meter Register Number: " + attributes.REGISTER_SERIAL_A + "</p>";
                 content += registerId;
@@ -93,7 +90,7 @@
                     muiId = "<p>Meter Radio Number: No radio installed at this location</p>";
                 }
                 content += muiId;
-                content += "</div>"
+                content += "</div></div>"
                 return content;
 
             }
@@ -101,7 +98,7 @@
                 let coords = data.features[0].geometry;
                 let accountNo = data.features[0].attributes.ACCOUNT_NUMBER_N;
                 let url = "https://surrey.maps.arcgis.com/apps/Embed/index.html?webmap=05766ee6fedf4c9b886871bcb2225aa6&zoom=false&show_panel=false&popup_sidepanel=false&legend=false&disable_scroll=false&level=9&marker=" + coords.x + ";" + coords.y + ";26910";
-                let mapFrame = "<div class='mapDiv'><iframe id='mapFrame' frameborder='0' width='100%' height='400' scrolling='no' marginheight='0' marginwidth='0' title='Water Meter Map' src='" + url + "'</iframe></div>";
+                let mapFrame = "<div class='mapDiv col'><div class='card'><iframe id='mapFrame' frameborder='0' width='100%' height='400' scrolling='no' marginheight='0' marginwidth='0' title='Water Meter Map' src='" + url + "'</iframe></div></div>";
 
                 return mapFrame;
 
@@ -111,27 +108,27 @@
                 // $("#results").append(mapFrame2);
             }
 
-            $("#submit").click (function (e) {
+            $("#submit").click(function (e) {
                 e.preventDefault();
                 if ($(addressSearch).val()) {
-                    $("submit").prop( "disabled", false);
-                    let address = $(addressSearch).val(); 
+                    $("submit").prop("disabled", false);
+                    let address = $(addressSearch).val();
                     let addressParts = address.split(' ');
                     let house = addressParts[0];
                     let street = '';
-                    addressParts.forEach(function(item, index) {
+                    addressParts.forEach(function (item, index) {
                         if (index > 0) {
                             street += item + ' ';
                         }
                     });
                     $.get({
                         url: "https://gisservices.surrey.ca/arcgis/rest/services/Public/Water/MapServer/1/query",
-                        data: { 
-                            f: "json", 
+                        data: {
+                            f: "json",
                             where: "HOUSE = " + house + " AND STREET LIKE '" + street.trim().toUpperCase() + "%'",
                             outfields: "*"
                         },
-                        success: function(data){
+                        success: function (data) {
                             if (data.features.length > 0) {
                                 $("#results").html('');
                                 $("#results").append(getMap(data))
@@ -145,15 +142,15 @@
                         }
                     });
                 } else if ($(accountSearch).val()) {
-                    $("submit").prop( "disabled", false);
+                    $("submit").prop("disabled", false);
                     $.get({
                         url: "https://gisservices.surrey.ca/arcgis/rest/services/Public/Water/MapServer/1/query",
-                        data: { 
-                            f: "json", 
+                        data: {
+                            f: "json",
                             where: "ACCOUNT_NUMBER_N = " + $(accountSearch).val(),
                             outfields: "*"
                         },
-                        success: function(data){
+                        success: function (data) {
                             if (data.features.length > 0) {
                                 $("#results").html('');
                                 $("#results").append(getMap(data))
@@ -167,54 +164,64 @@
                         }
                     });
                 } else {
-                    let errorMsg = "<p>Please enter an address or account #</p></div>";
+                    let errorMsg = "<p>Please enter an address or account #.</p></div>";
                     $("#results").html(errorMsg);
                 }
             });
-            $("#helpBtn").click (function (e) {
+            $("#helpBtn").click(function (e) {
                 $("#helpModal").css("display", "block");
             });
 
-            $("#closeBtn").click (function (e) {
+            $("#closeBtn").click(function (e) {
                 $("#helpModal").css("display", "none");
             });
 
         });        
     </script>
-    <div id="title" class="title">City of Surrey Water Meter Locator</div>
-    <div id="content" class="content">
-        <div id="address" name="address">
-            <label for="addressSearch" >Address: </label>
-            <input id="addressSearch" class="inputBox" onFocus="value=''" onclick="clearInput();$(this).val('');">
+    <div class="container-fluid">
+        <div class="row">
+            <div id="title" class="title col mt-1"><h1>City of Surrey Water Meter Locator <span id="helpBtn"><svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" fill="currentColor" class="bi bi-question-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"/>
+              </svg></span></h1></div>
         </div>
-        <div><label style="font-weight: 600 !important;">OR</label></div>
-        <div id="account" name="account">
-            <label for="accountSearch" >Account #: </label>
-            <input id="accountSearch" type="text" class="inputBox" onFocus="value=''" onclick="clearInput();$(this).val('');">
+        <div class="row">
+            <div id="content" class="content col">
+                <div id="address" name="address">
+                    <label for="addressSearch">Address: </label>
+                    <input id="addressSearch" class="inputBox" onFocus="value=''"
+                        onclick="clearInput();">
+                </div>
+                <div><label style="font-weight: 600 !important;">OR</label></div>
+                <div id="account" name="account">
+                    <label for="accountSearch">Account #: </label>
+                    <input id="accountSearch" type="text" class="inputBox" onFocus="value=''"
+                        onclick="clearInput();">
+                </div>
+                <div>
+                    <button type="submit" class="button" id="submit">Locate</button>
+                </div>
+            </div>
         </div>
-        <div>
-            <button type="submit" class="button" id="submit" >Locate</button>
-            <button class="button button-light" id="helpBtn" >Help</button>
-        </div>
+        <div id="results" class="row row-cols-1 row-cols-lg-3 mt-3"></div>
     </div>
-    <div id="results" class="card"></div>
 
     <div id="helpModal" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
-          <div class="modal-header">
-            <span id="closeBtn" class="close">&times;</span>
-            <h2>Help</h2>
-          </div>
-          <div class="modal-body">
-            <p>1. Enter your home address or account number.</p>
-            <p>2. A map and photo will show your water meter location.  The meter is under the orange traffic cone.</p>
-            <p>The meter looks similar to this example: </p>
-            <img src="images/water-meter-example.jpg">
-            <p>If the meter is not found with this tool, contact the City of Surrey at 604-591-4152 for assistance.</p>
-          </div>
+            <div class="modal-header">
+                <h2 class="modal-title">Help</h2>
+                <span id="closeBtn" class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>1. Enter your home address or account number.</p>
+                <p>2. A map and photo will show your water meter location. At the time the picture was taken, an orange traffic cone was placed on top of the meter.</p>
+                <p>The meter looks similar to this example: </p>
+                <img src="images/water-meter-example.jpg">
+                <p class="mt-1">If the meter is not found with this tool, contact the City of Surrey at 604-591-4152 for
+                    assistance.
+                </p>
+            </div>
         </div>
-      </div>
     </div>
 </body>
 

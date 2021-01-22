@@ -14,48 +14,35 @@ label {
     font-size: 1.1em;
 }
 
-.title{
-    width: calc(100% - 40px);
-    display:flex;
-    color: #000000;
-    font-weight: 600 !important;
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
     line-height: 1.4;
     font-family: 'Univers LT W02 55 Roman', Helvetica, Arial, sans-serif !important;
-    font-size: 1.2em;
-    padding-left:10px;
-    /* padding-top:10px; */
 }
-
-.content {
-    padding:10px;
-    width: calc(100% - 40px);
-}
-
 
 .card {
     /* Add shadows to create the "card" effect */
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    /*max-width: 640px;
-    width:100%; */
-    width: calc(50% - 40px);
     padding:10px;
-    /* margin:10px; */
-    display:flex;
-    display:-webkit-flex;
-    display:-moz-box-flex;
-    flex-direction: column;
 }
+
   
   /* On mouse-over, add a deeper shadow */
 .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
   
-/* Add some padding inside the card container 
-.container {
-    padding: 2px 16px;
-}*/
+
+#helpBtn {
+    color: #8eac66;
+}
+
+#helpBtn:hover {
+    color: #000;
+    cursor: pointer;
+}
 
 img {
     image-rendering:-moz-crisp-edges;         /* Firefox */
@@ -67,19 +54,25 @@ img {
     max-width:640px;
     height:100%;
     width:100%;*/
-    width: 100%;
     flex-grow:0;
     flex-shrink:0;
 }
 
+#results img {
+    width: 100%;
+}
+
 .mapDiv {
-    padding-bottom:10px;
     flex: 1 1 auto;
     display:flex;
     display:-webkit-flex;
     display:-moz-box-flex;
     flex-direction: column;
     /*width: 100% !important;*/
+}
+
+#results .col {
+    margin-bottom: 1rem;
 }
 
 #mapFrame {
