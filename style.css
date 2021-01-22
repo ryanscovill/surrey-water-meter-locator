@@ -1,0 +1,301 @@
+body {
+    font-family: 'Univers LT W02 55 Roman', Helvetica, Arial, sans-serif;
+    color: #010201;
+    margin: 0px !important;
+}
+
+label {
+    width:120px;
+    display:inline-block;
+    color: #000000;
+    font-weight: 400 !important;
+    line-height: 1.4;
+    font-family: 'Univers LT W02 55 Roman', Helvetica, Arial, sans-serif !important;
+    font-size: 1.1em;
+}
+
+.title{
+    width: calc(100% - 40px);
+    display:flex;
+    color: #000000;
+    font-weight: 600 !important;
+    line-height: 1.4;
+    font-family: 'Univers LT W02 55 Roman', Helvetica, Arial, sans-serif !important;
+    font-size: 1.2em;
+    padding-left:10px;
+    /* padding-top:10px; */
+}
+
+.content {
+    padding:10px;
+    width: calc(100% - 40px);
+}
+
+
+.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    /*max-width: 640px;
+    width:100%; */
+    width: calc(50% - 40px);
+    padding:10px;
+    /* margin:10px; */
+    display:flex;
+    display:-webkit-flex;
+    display:-moz-box-flex;
+    flex-direction: column;
+}
+  
+  /* On mouse-over, add a deeper shadow */
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+  
+/* Add some padding inside the card container 
+.container {
+    padding: 2px 16px;
+}*/
+
+img {
+    image-rendering:-moz-crisp-edges;         /* Firefox */
+    image-rendering:-o-crisp-edges;         /* Opera */
+    image-rendering:-webkit-optimize-contrast;/* Webkit (non-standard naming) */
+    image-rendering:crisp-edges;
+    -ms-interpolation-mode:nearest-neighbor;  /* IE (non-standard property) */
+    /*max-height:480px;
+    max-width:640px;
+    height:100%;
+    width:100%;*/
+    width: 100%;
+    flex-grow:0;
+    flex-shrink:0;
+}
+
+.mapDiv {
+    padding-bottom:10px;
+    flex: 1 1 auto;
+    display:flex;
+    display:-webkit-flex;
+    display:-moz-box-flex;
+    flex-direction: column;
+    /*width: 100% !important;*/
+}
+.embed-container {
+    position: relative; 
+    padding-bottom: 75%; 
+    height: 0; max-width: 100%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+} 
+
+.embed-container:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.embed-container iframe, .embed-container object, 
+
+.embed-container iframe {
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+} 
+
+small {
+    position: absolute; 
+    z-index: 40; 
+    bottom: 0; 
+    margin-bottom: -15px;
+}
+
+.flex-container {
+    display:flex;
+    display:-webkit-flex;
+    display:-moz-box-flex;
+    flex-direction: row;
+    -moz-flex-direction: row;
+    -webkit-flex-direction: row;
+    flex-wrap:wrap;
+    -moz-flex-wrap:wrap;
+    -webkit-flex-wrap:wrap;
+    max-width:999px;
+    width:95%;
+}
+
+.flex-item {
+    display: flex;
+    -ms-flex-align-items:center;
+    -moz-flex-align-items:center;
+    -webkit-flex-align-items:center;
+    align-items:center;
+    min-width:350px;
+}
+
+.inputBox{
+    border: 2px solid #d9d9d5 !important;
+    padding: 10px 0;
+    border-radius: 3px;
+    margin-right: 14px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    font-size: 1.2em;
+    background: white;
+    width: 288px;
+    max-height: 200px;
+    overflow: hidden;
+    font-family: 'Univers LT W02 55 Roman', Helvetica, Arial, sans-serif !important;
+}
+
+select::-ms-expand {
+    visibility: hidden;
+}
+
+select{
+    border: 2px solid #d9d9d5 !important;
+    padding: 10px 0;
+    border-radius: 3px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    font-size: 1.2em;
+    max-height: 200px;
+    width: 300px;
+    overflow: hidden;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url(dropdown.png) right / 20px no-repeat #fff;
+    /*padding-right: 20px;*/
+    font-family: 'Univers LT W02 55 Roman', Helvetica, Arial, sans-serif !important;
+} 
+
+
+option {
+    color: #000;
+    background-color: #fff;
+    font-size: 1.1em !important;
+    font-family: 'Univers LT W02 55 Roman', Helvetica, Arial, sans-serif !important;
+    font-weight: normal;
+    display: block;
+    white-space: pre;
+    min-height: 1.2em;
+    padding: 0px 2px 1px;
+}
+
+button {
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-direction: normal;
+    text-decoration: none;
+    font-weight: 700;
+    appearance: none;
+    border: 2px solid #8eac66;
+    border-radius: 4px;
+    background-color: #8eac66;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    text-align: center;
+    line-height: 0;
+    white-space: nowrap;
+    text-transform: uppercase;
+    padding: 1.5em;
+    outline: none;
+}
+
+.button-light {
+    background-color: #a7ad9f;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: calc(100%); /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content/Box */
+  .modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: 2% auto; /* 15% from the top and centered */
+    padding: 0px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    animation-name: animatetop;
+    animation-duration: 0.4s
+  }
+  
+  /* The Close Button */
+  .close {
+    color:  white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  /* Modal Header */
+  .modal-header {
+    padding: 2px 16px;
+    background-color: #8eac66;
+    color: white;
+  }
+  
+  /* Modal Body */
+  .modal-body {padding: 2px 16px;}
+/* HAck to hide the seleted object symbol 
+circle {
+    display: none !important;
+}
+
+path {
+    display: none !important;
+}
+
+.calcite .esriViewPopup .gallery .frame {
+    max-width: 100% !important;
+    max-height: 240px !important;
+}
+
+.calcite .esriViewPopup .gallery {
+    max-width: 100% !important;
+    max-height: 240px !important;
+}
+
+*/
+/* @media screen and (min-width: 319px) and (max-width: 500px) and (orientation: portrait) {
+    .flex-container {
+        max-width: calc(100% - 10px);
+    }
+    select {
+        width: 100%;
+    }
+    #autoComplete{
+        width: calc(100% - 16px);
+  } */
+/*#results {
+    font-family: 'Univers LT W02 55 Roman', Helvetica, Arial, sans-serif !important;
+    font-size: 1.2em;
+    padding-top: 20px;
+    white-space: pre-wrap;
+    width: 95%;
+    font-weight: normal;
+}*/

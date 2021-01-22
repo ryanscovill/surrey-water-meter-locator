@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>City of Surrey Water Meter Locator</title>
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+        crossorigin="anonymous"></script>
+
+
+</head>
+<style>
+    @media screen and (max-width: 1400px) {
+        .card {
+            width: calc(100% - 20px);
+        }
+    }
+
+</style>
+<body onload="loadFunction()">
+    <script type="text/javascript">
+        function loadFunction() {
+            clearInput()
+        }
+        function clearInput(){
+            $("submit").prop( "disabled", true );
+            $("#results").html('');
+            $("#results").hide()
+        }
+
+        $(function () {
+            $("#addressSearch").autocomplete({
+                //autoFocus: true,
+                source: function (request, response) {
+                    $.ajax({
+                        url: "https://cosmos.surrey.ca/api/sr/GetValidAddress/" + request.term,
+                        type: "get", //send it through get method
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                test = item.ListValue;
+                                test = test.indexOf("Road");
+                                if (test === -1) {
+                                    return {
+                                        value: item.ListValue
+                                    };
+                                }
+                            }));
+                        }
+                    });
+                },
+            });
+ 
+            function getMeterInformation(data) {
+                let content = '';
+                let feature = data.features
+                let attributes = feature[0].attributes;
+                let img;
+                if (attributes.IMAGE !== null) {
+                    let image = attributes.IMAGE.replace('http', 'https');
+                    img = "<div><img src='" + image + "'></div>";
+                }
+                else {img = "<p>No Photo found at this location</p>"}
+                content += img;
+                let address = "<div><p>Address: " + attributes.HOUSE + " " + attributes.STREET + "</p>";
+                content += address;
+                let accountNo = "<p>Account Number: " + attributes.ACCOUNT_NUMBER_N + "</p>";
+                content += accountNo;
+                let propertyDesc = "<p>Location Description: " + attributes.LOCATION_DESC_A + "</p>";
+                content += propertyDesc;
+                let convertInstalledDate = new Date(attributes.INSTALLED_DATE_A);
+                let convertReadingDate = new Date(attributes.LAST_READING_DATE_A);
+                let installedDate = "<p>Meter Installed Date: " + convertInstalledDate.toLocaleDateString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'}) + "</p>";
+                content += installedDate;
+                let lastReading = "<p>Meter Last Reading: " + attributes.LAST_READING_A + "</p>";
+                content += lastReading;
+                let lastReadingDate = "<p>Meter Last Reading Date: " + convertReadingDate.toLocaleDateString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'})  + "</p>";
+                content += lastReadingDate;
+                let registerId = "<p>Meter Register Number: " + attributes.REGISTER_SERIAL_A + "</p>";
+                content += registerId;
+                let muiId;
+                if (attributes.MIU_ID_A !== null) {
+                    muiId = "<p>Meter Radio Number: " + attributes.MIU_ID_A + "</p>";
+                }
+                else {muiId = "<p>Meter Radio Number: No radio installed at this location</p>";}
+                content += muiId;
+
+                $("#results").append(content);
+
+            }
+            function getMap(data) {
+                let coords = data.features[0].geometry;
+                let accountNo = data.features[0].attributes.ACCOUNT_NUMBER_N;
+                let url = "https://surrey.maps.arcgis.com/apps/Embed/index.html?webmap=05766ee6fedf4c9b886871bcb2225aa6&zoom=false&show_panel=false&popup_sidepanel=false&legend=false&disable_scroll=false&level=9&marker=" + coords.x + ";" + coords.y + ";26910";
+                let mapFrame = "<div class='mapDiv'><iframe frameborder='0' width='100%' height='400' scrolling='no' marginheight='0' marginwidth='0' title='Water Meter Map' src='" + url + "'</iframe></div>";
+
+                $("#results").append(mapFrame);
+
+                //Alternative map with attributes in side panel
+                //let url2 = "https://surrey.maps.arcgis.com/apps/Embed/index.html?webmap=40fb5bcfeb3345d7903167b2d2ee9be8&zoom=false&show_panel=true&popup_sidepanel=true&legend=false&disable_scroll=false&level=9&feature=Water_7915;ACCOUNT_NUMBER_N;" + accountNo;
+                // let mapFrame2 = "<div style='padding-bottom:10px;'><iframe id='map2' width='640' height='480' frameborder='0' scrolling='no' marginheight='0' marginwidth='0' title='Water Meter Map' src='" + url2 + "'</iframe></div>";
+                // $("#results").append(mapFrame2);
+            }
+
+            $("#submit").click (function (e) {
+                e.preventDefault();
+                if ($(addressSearch).val()) {
+                    $("submit").prop( "disabled", false);
+                    let address = $(addressSearch).val(); 
+                    let addressParts = address.split(' ');
+                    let house = addressParts[0];
+                    let street = '';
+                    addressParts.forEach(function(item, index) {
+                        if (index > 0) {
+                            street += item + ' ';
+                        }
+                    });
+                    $.get({
+                        url: "https://gisservices.surrey.ca/arcgis/rest/services/Public/Water/MapServer/1/query",
+                        data: { 
+                            f: "json", 
+                            where: "HOUSE = " + house + " AND STREET LIKE '" + street.trim().toUpperCase() + "%'",
+                            outfields: "*"
+                        },
+                        success: function(data){
+                            if (data.features.length > 0) {
+                                getMap(data);
+                                getMeterInformation(data);
+                            }
+                            else {
+                                let errorMsg = "<p>Could not find a meter at this property.</p></div>";
+                                $("#results").append(errorMsg);
+                            }
+                            $("#results").show();
+                        }
+                    });
+                }
+                if ($(accountSearch).val()) {
+                    $("submit").prop( "disabled", false);
+                    $.get({
+                        url: "https://gisservices.surrey.ca/arcgis/rest/services/Public/Water/MapServer/1/query",
+                        data: { 
+                            f: "json", 
+                            where: "ACCOUNT_NUMBER_N = " + $(accountSearch).val(),
+                            outfields: "*"
+                        },
+                        success: function(data){
+                            if (data.features.length > 0) {
+                                getMap(data);
+                                getMeterInformation(data);
+                            }
+                            else {
+                                let errorMsg = "<p>Entered Account # is not valid.</p></div>";
+                                $("#results").append(errorMsg);
+                            }
+                            $("#results").show();
+                        }
+                    });
+                }
+            });
+            $("#helpBtn").click (function (e) {
+                $("#helpModal").css("display", "block");
+            });
+
+            $("#closeBtn").click (function (e) {
+                $("#helpModal").css("display", "none");
+            });
+
+        });        
+    </script>
+    <div id="title" class="title">City of Surrey Water Meter Locator</div>
+    <div id="content" class="content">
+        <div id="address" name="address">
+            <label for="addressSearch" >Address: </label>
+            <input id="addressSearch" class="inputBox" onFocus="value=''" onclick="clearInput();$(this).val('');">
+        </div>
+        <div><label style="font-weight: 600 !important;">OR</label></div>
+        <div id="account" name="account">
+            <label for="accountSearch" >Account #: </label>
+            <input id="accountSearch" type="text" class="inputBox" onFocus="value=''" onclick="clearInput();$(this).val('');">
+        </div>
+        <div>
+            <button type="submit" class="button" id="submit" >Locate</button>
+            <button class="button button-light" id="helpBtn" >Help</button>
+        </div>
+    </div>
+    <div id="results" class="card"></div>
+
+    <div id="helpModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <span id="closeBtn" class="close">&times;</span>
+            <h2>Help</h2>
+          </div>
+          <div class="modal-body">
+            <p>1. Enter your home address or account number.</p>
+            <p>2. A map and photo will show your water meter location.  The meter is under the orange traffic cone.</p>
+            <p>The meter looks similar to this example: </p>
+            <img src="images/water-meter-example.jpg">
+            <p>If the meter is not found with this tool, contact the City of Surrey at 604-591-4152 for assistance.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+
+</html>
