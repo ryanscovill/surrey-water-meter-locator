@@ -89,10 +89,12 @@
                 if (attributes.MIU_ID_A !== null) {
                     muiId = "<p>Meter Radio Number: " + attributes.MIU_ID_A + "</p>";
                 }
-                else {muiId = "<p>Meter Radio Number: No radio installed at this location</p>";}
+                else {
+                    muiId = "<p>Meter Radio Number: No radio installed at this location</p>";
+                }
                 content += muiId;
-
-                $("#results").append(content);
+                content += "</div>"
+                return content;
 
             }
             function getMap(data) {
@@ -101,7 +103,7 @@
                 let url = "https://surrey.maps.arcgis.com/apps/Embed/index.html?webmap=05766ee6fedf4c9b886871bcb2225aa6&zoom=false&show_panel=false&popup_sidepanel=false&legend=false&disable_scroll=false&level=9&marker=" + coords.x + ";" + coords.y + ";26910";
                 let mapFrame = "<div class='mapDiv'><iframe id='mapFrame' frameborder='0' width='100%' height='400' scrolling='no' marginheight='0' marginwidth='0' title='Water Meter Map' src='" + url + "'</iframe></div>";
 
-                $("#results").append(mapFrame);
+                return mapFrame;
 
                 //Alternative map with attributes in side panel
                 //let url2 = "https://surrey.maps.arcgis.com/apps/Embed/index.html?webmap=40fb5bcfeb3345d7903167b2d2ee9be8&zoom=false&show_panel=true&popup_sidepanel=true&legend=false&disable_scroll=false&level=9&feature=Water_7915;ACCOUNT_NUMBER_N;" + accountNo;
@@ -131,18 +133,18 @@
                         },
                         success: function(data){
                             if (data.features.length > 0) {
-                                getMap(data);
-                                getMeterInformation(data);
+                                $("#results").html('');
+                                $("#results").append(getMap(data))
+                                $("#results").append(getMeterInformation(data))
                             }
                             else {
                                 let errorMsg = "<p>Could not find a meter at this property.</p></div>";
-                                $("#results").append(errorMsg);
+                                $("#results").html(errorMsg);
                             }
                             $("#results").show();
                         }
                     });
-                }
-                if ($(accountSearch).val()) {
+                } else if ($(accountSearch).val()) {
                     $("submit").prop( "disabled", false);
                     $.get({
                         url: "https://gisservices.surrey.ca/arcgis/rest/services/Public/Water/MapServer/1/query",
@@ -153,8 +155,9 @@
                         },
                         success: function(data){
                             if (data.features.length > 0) {
-                                getMap(data);
-                                getMeterInformation(data);
+                                $("#results").html('');
+                                $("#results").append(getMap(data))
+                                $("#results").append(getMeterInformation(data))
                             }
                             else {
                                 let errorMsg = "<p>Entered Account # is not valid.</p></div>";
@@ -163,6 +166,9 @@
                             $("#results").show();
                         }
                     });
+                } else {
+                    let errorMsg = "<p>Please enter an address or account #</p></div>";
+                    $("#results").html(errorMsg);
                 }
             });
             $("#helpBtn").click (function (e) {
