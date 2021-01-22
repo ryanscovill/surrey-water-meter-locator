@@ -204,6 +204,15 @@ button {
     outline: none;
 }
 
+input::-webkit-search-cancel-button{
+    position:relative;
+    right:20px;    
+}
+
+input[type=search] {
+    outline-offset: 0;
+}
+
 button:hover {
     background-color: #59703b;
     border: 2px solid #59703b;

@@ -22,10 +22,7 @@
 <body onload="loadFunction()">
     <script type="text/javascript">
         function loadFunction() {
-            clearInput()
-        }
-        function clearInput() {
-            $(this).val('');
+            $('.inputBox').val('');
         }
 
         $(function () {
@@ -201,14 +198,12 @@
                 <div id="content" class="content col">
                     <div id="address" name="address">
                         <label for="addressSearch">Address: </label>
-                        <input id="addressSearch" class="inputBox" onFocus="value=''" type="input"
-                            onclick="clearInput();">
+                        <input id="addressSearch" class="inputBox" type="search" autofocus>
                     </div>
                     <div><label style="font-weight: 600 !important;">OR</label></div>
                     <div id="account" name="account">
                         <label for="accountSearch">Account #: </label>
-                        <input id="accountSearch" type="text" class="inputBox" onFocus="value=''"
-                            onclick="clearInput();">
+                        <input id="accountSearch" type="search" class="inputBox">
                     </div>
                     <div>
                         <button type="submit" class="button" id="submit">Locate</button>
